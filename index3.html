@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title data-lang="progressTitle">تتبع التقدم</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
+  <script src="script.js" defer></script>
+  <style>
+    body { background: #0b1224; color: #f0f0f0; }
+    h1, h2 { color: #ffd700; }
+    .navigation-buttons { display: flex; justify-content: space-between; max-width: 300px; margin: 3rem auto; }
+    .card { background: #1e1e2f; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; }
+  </style>
+</head>
+<body data-page="tracking">
+<canvas id="bg"></canvas>
+
+<nav>
+  <a href="index1.html" data-lang="home">الرئيسية</a>
+  <a href="index2.html" data-lang="resources">الموارد</a>
+  <a href="index3.html" data-lang="tracking">التتبع</a>
+  <a href="index4.html" data-lang="helplines">الدعم</a>
+  <button id="lang-toggle" onclick="toggleLanguage()">AR/EN</button>
+</nav>
+
+<header>
+  <h1 data-lang="trackingTitle">تتبع تقدمك</h1>
+  <p data-lang="trackingDesc">استخدم هذه الصفحة لتسجيل إنجازاتك اليومية وتحفيز نفسك على الاستمرار.</p>
+</header>
+
+<section>
+  <h2 data-lang="journalTitle">سجل الإقلاع</h2>
+  <div class="card">
+    <form id="progress-form">
+      <label for="day" data-lang="dayLabel">اليوم:</label>
+      <input type="text" id="day" name="day" required>
+
+      <label for="note" data-lang="noteLabel">ملاحظات:</label>
+      <textarea id="note" name="note" rows="4" required></textarea>
+
+      <button type="submit" data-lang="saveBtn">حفظ التقدم</button>
+    </form>
+  </div>
+</section>
+
+<section>
+  <h2 data-lang="historyTitle">سجل الأيام السابقة</h2>
+  <div id="progress-log" class="card">
+    <p data-lang="noData">لا توجد بيانات محفوظة بعد.</p>
+  </div>
+</section>
+
+<section class="navigation-buttons">
+  <a href="index2.html" class="btn" data-lang="back">« الصفحة السابقة</a>
+  <a href="index4.html" class="btn" data-lang="next">الصفحة التالية »</a>
+</section>
+
+<footer><p>&copy; 2025 HealthyUAE</p></footer>
+
+<script>
+  // تخزين بيانات التقدم محليًا
+  const form = document.getElementById('progress-form');
+  const log = document.getElementById('progress-log');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const day = document.getElementById('day').value.trim();
+    const note = document.getElementById('note').value.trim();
+    if (day && note) {
+      const entry = document.createElement('p');
+      entry.textContent = `📅 ${day}: ${note}`;
+      log.appendChild(entry);
+      localStorage.setItem(day, note);
+      form.reset();
+    }
+  });
+
+  // تحميل البيانات المحفوظة
+  window.addEventListener('DOMContentLoaded', () => {
+    log.innerHTML = '';
+    for (let i = 0; i < localStorage.length; i++) {
+      const day = localStorage.key(i);
+      const note = localStorage.getItem(day);
+      const entry = document.createElement('p');
+      entry.textContent = `📅 ${day}: ${note}`;
+      log.appendChild(entry);
+    }
+    if (log.children.length === 0) {
+      log.innerHTML = `<p data-lang="noData">لا توجد بيانات محفوظة بعد.</p>`;
+    }
+  });
+</script>
+</body>
+</html>
